@@ -1,0 +1,12 @@
+{
+  "name": "fruitade",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/jrainlau/fruitade.git",
+  "author": "jrainliu <jrainliu@tencent.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bsdiff-node": "^2.4.0",
+    "fs-extra": "^11.1.1"
+  }
+}
