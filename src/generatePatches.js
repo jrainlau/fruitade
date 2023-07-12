@@ -1,23 +1,9 @@
 const fs = require('fs-extra')
 const path = require('path')
 const bsdiff = require('bsdiff-node')
+const { doDiff } = require('./utils')
 
-function doDiff(ver1FilePath, ver2FilePath, patchFilPath) {
-  return new Promise(resolve => {
-    const filename = patchFilPath.split(path.sep)[patchFilPath.split(path.sep).length - 1]
-    const consoleTimeLabel = `${filename} generated`
-
-    console.time(consoleTimeLabel)
-    bsdiff.diff(ver1FilePath, ver2FilePath, patchFilPath, (result) => {
-      if (result === 100) {
-        console.timeEnd(consoleTimeLabel)
-        resolve(patchFilPath)
-      }
-    })
-  })
-}
-
-async function generatePatches({ folderA, folderB, diffJson, doDiffThreshold, folderPatch }) {
+async function generatePatches({ folderOfA, folderOfB, diffJson, doDiffThreshold, folderOfPatches }) {
   const { modified } = diffJson
 
   // 1. find all filePath that needs bsdiff
@@ -33,9 +19,9 @@ async function generatePatches({ folderA, folderB, diffJson, doDiffThreshold, fo
   const bsdiffPromises = []
 
   for (const filePath of needBsdiffFilePathList) {
-    const ver1FilePath = path.join(folderA, filePath)
-    const ver2FilePath = path.join(folderB, filePath)
-    const patchFilPath = path.join(folderPatch,`${modified[filePath].filename}.patch`)
+    const ver1FilePath = path.join(folderOfA, filePath)
+    const ver2FilePath = path.join(folderOfB, filePath)
+    const patchFilPath = path.join(folderOfPatches,`${modified[filePath].filename}.patch`)
     const bsdiffPromise = doDiff(ver1FilePath, ver2FilePath, patchFilPath)
 
     bsdiffPromises.push(bsdiffPromise)

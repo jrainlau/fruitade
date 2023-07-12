@@ -1,6 +1,28 @@
 const path = require('path')
 const fs = require('fs-extra')
 const bsdiff = require('bsdiff-node')
+const crypto = require('crypto')
+
+function calculateFileMD5(filePath) {
+  return new Promise((resolve, reject) => {
+    const stream = fs.createReadStream(filePath)
+    const hash = crypto.createHash('md5')
+
+    stream.on('data', (data) => {
+      hash.update(data)
+    })
+
+    stream.on('end', () => {
+      const md5Hash = hash.digest('hex')
+      resolve(md5Hash)
+    })
+
+    stream.on('error', (error) => {
+      console.log(error)
+      reject(error)
+    })
+  })
+}
 
 /**
  * Description
@@ -32,5 +54,22 @@ function doPatch(originFilePath, newFilePath, patchFilePath) {
   })
 }
 
+function doDiff(fileA, fileB, filePatch) {
+  return new Promise(resolve => {
+    const filename = filePatch.split(path.sep)[filePatch.split(path.sep).length - 1]
+    const consoleTimeLabel = `${filename} generated`
+
+    console.time(consoleTimeLabel)
+    bsdiff.diff(fileA, fileB, filePatch, (result) => {
+      if (result === 100) {
+        console.timeEnd(consoleTimeLabel)
+        resolve(filePatch)
+      }
+    })
+  })
+}
+
+exports.calculateFileMD5 = calculateFileMD5
 exports.copyToFolder = copyToFolder
+exports.doDiff = doDiff
 exports.doPatch = doPatch

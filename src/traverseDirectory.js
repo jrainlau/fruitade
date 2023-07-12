@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const calculateFileMd5 = require('./calculateFileMD5')
+const { calculateFileMD5 } = require('./utils')
 
 async function traverseDirectory(dirPath, ignoreList = []) {
   const dirs = {}
@@ -18,7 +18,7 @@ async function traverseDirectory(dirPath, ignoreList = []) {
         dirs[filename] = {
           filename,
           size,
-          md5: await calculateFileMd5(filePath)
+          md5: await calculateFileMD5(filePath)
         }
       } else if (isDirectory && !ignoreList.includes(filename)) {
         dirs[filename] = {}
