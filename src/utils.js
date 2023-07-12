@@ -69,7 +69,12 @@ function doDiff(fileA, fileB, filePatch) {
   })
 }
 
+function convertPathSeparatorToUnderscore(filePath) {
+  return filePath.split(path.sep).join('_')
+}
+
 exports.calculateFileMD5 = calculateFileMD5
 exports.copyToFolder = copyToFolder
 exports.doDiff = doDiff
 exports.doPatch = doPatch
+exports.convertPathSeparatorToUnderscore = convertPathSeparatorToUnderscore

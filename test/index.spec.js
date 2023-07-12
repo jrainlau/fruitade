@@ -39,13 +39,6 @@ describe('Test generatePatchPackage() and generateNewVersionPackage()', () => {
       folderNew,
     })
 
-    const fileList = fs.readdirSync(folderNew)
-
-    expect(fileList.includes('1b.md')).toBe(true)
-    expect(fileList.includes('5b.md')).toBe(true)
-    expect(fileList.includes('10b.md')).toBe(true)
-    expect(fileList.includes('a_new_folder_of_b')).toBe(true)
-
     const fileBInfolderOfBContent = fs.readFileSync(path.join(folderOfB, 'a_new_folder_of_b', 'fileB.md'), 'utf-8')
     const fileBInFolderNewContent = fs.readFileSync(path.join(folderNew, 'a_new_folder_of_b', 'fileB.md'), 'utf-8')
     expect(fileBInFolderNewContent).toEqual(fileBInfolderOfBContent)

@@ -6,6 +6,7 @@ const {
   copyToFolder,
   doDiff,
   doPatch,
+  convertPathSeparatorToUnderscore,
 } = require('../src/utils')
 
 describe('Test utils.js', () => {
@@ -53,5 +54,11 @@ describe('Test utils.js', () => {
 
     fs.removeSync(fileNew)
     fs.removeSync(filePatch)
+  })
+
+  test('convertPathSeparatorToUnderscore()', () => {
+    const filePath = 'x/y/z/ddd.txt'
+
+    expect(convertPathSeparatorToUnderscore(filePath)).toBe('x_y_z_ddd.txt')
   })
 })
