@@ -1,2 +1,2 @@
 # fruitade
-Make updating complex directories easier.
+Make updating complex directories easier~
