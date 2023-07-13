@@ -5,13 +5,13 @@ const { generatePatchPackage, generateNewVersionPackage } = require('../src/inde
 describe('Test generatePatchPackage() and generateNewVersionPackage()', () => {
   const folderOfA = path.resolve(__dirname, './folderOfA')
   const folderOfB = path.resolve(__dirname, './folderOfB')
-  const folderNew = path.resolve(__dirname, './folderNew')
+  const folderOfNewVersion = path.resolve(__dirname, './folderOfNewVersion')
   const folderOfPatches = path.resolve(__dirname, './folderOfPatches2')
   const doDiffThreshold = 5
 
   afterAll(() => {
     fs.removeSync(folderOfPatches)
-    fs.removeSync(folderNew)
+    fs.removeSync(folderOfNewVersion)
   })
 
   test('generatePatchPackage()', async () => {
@@ -36,11 +36,11 @@ describe('Test generatePatchPackage() and generateNewVersionPackage()', () => {
     await generateNewVersionPackage({
       folderOfA,
       folderOfPatches,
-      folderNew,
+      folderOfNewVersion,
     })
 
     const fileBInfolderOfBContent = fs.readFileSync(path.join(folderOfB, 'a_new_folder_of_b', 'fileB.md'), 'utf-8')
-    const fileBInFolderNewContent = fs.readFileSync(path.join(folderNew, 'a_new_folder_of_b', 'fileB.md'), 'utf-8')
-    expect(fileBInFolderNewContent).toEqual(fileBInfolderOfBContent)
+    const fileBInfolderOfNewVersionContent = fs.readFileSync(path.join(folderOfNewVersion, 'a_new_folder_of_b', 'fileB.md'), 'utf-8')
+    expect(fileBInfolderOfNewVersionContent).toEqual(fileBInfolderOfBContent)
   })
 })
