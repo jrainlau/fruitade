@@ -65,8 +65,9 @@ async function generatePatchPackage({ folderOfA, folderOfB, folderOfPatches, doD
  * @param {string} folderOfA
  * @param {string} folderOfPatches
  * @param {string} folderOfNewVersion
+ * @param {Function} [getBsdiff] return the bsdiff instance
  */
-async function generateNewVersionPackage({ folderOfA, folderOfPatches, folderOfNewVersion }) {
+async function generateNewVersionPackage({ folderOfA, folderOfPatches, folderOfNewVersion, getBsdiff }) {
   // 1. init folderOfNewVersion folder
   fs.removeSync(folderOfNewVersion)
   fs.mkdirSync(folderOfNewVersion)
@@ -91,7 +92,7 @@ async function generateNewVersionPackage({ folderOfA, folderOfPatches, folderOfN
       const newFilePath = path.join(folderOfNewVersion, filePath)
       
       fs.ensureDirSync(path.dirname(newFilePath))
-      const doPatchPromise = doPatch(originFilePath, newFilePath, path.join(folderOfPatches, patchFileName))
+      const doPatchPromise = doPatch(originFilePath, newFilePath, path.join(folderOfPatches, patchFileName), getBsdiff)
       doPatchPromises.push(doPatchPromise)
     }
   })

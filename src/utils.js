@@ -40,12 +40,13 @@ async function copyToFolder(sourceFolderPath, filePath, targetFolder) {
   await fs.copy(path.join(sourceFolderPath, filePath), targetFilePath)
 }
 
-function doPatch(originFilePath, newFilePath, patchFilePath) {
+function doPatch(originFilePath, newFilePath, patchFilePath, getBsdiff) {
   const consoleTimeLabel = `${newFilePath} generated`
 
   console.time(consoleTimeLabel)
   return new Promise(resolve => {
-    bsdiff.patch(originFilePath, newFilePath, patchFilePath, (res) => {
+    const bsdiffInstance = getBsdiff?.() || bsdiff
+    bsdiffInstance.patch(originFilePath, newFilePath, patchFilePath, (res) => {
       if (res === 100) {
         console.timeEnd(consoleTimeLabel)
         resolve(newFilePath)
