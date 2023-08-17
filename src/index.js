@@ -23,6 +23,7 @@ const { copyToFolder, doPatch, convertPathSeparatorToUnderscore } = require('./u
  * @param {string} folderOfA path of folderOfA
  * @param {string} folderOfB path of folderOfB
  * @param {string} folderOfPatches path of patchPackage
+ * @param {string} doDiffThreshold in kb
  */
 async function generatePatchPackage({ folderOfA, folderOfB, folderOfPatches, doDiffThreshold = 1024 * 500 }) {
   /** @type {FileInfo} */
@@ -41,13 +42,13 @@ async function generatePatchPackage({ folderOfA, folderOfB, folderOfPatches, doD
   const { added, modified } = diffJson
   // copy all added files into folderOfPatches
   Object.keys(added).forEach(async (filePath) => {
-    await copyToFolder(folderOfB, filePath, path.join(folderOfPatches, 'new_version'))
+    await copyToFolder(folderOfB, filePath, path.join(folderOfPatches, 'raw_files'))
   })
 
   // copy all modified files which is smaller than doDiffThreshold into folderOfPatches
   Object.keys(modified).forEach(async (filePath) => {
     if (modified[filePath].size > doDiffThreshold) return
-    await copyToFolder(folderOfB, filePath, path.join(folderOfPatches, 'new_version'))
+    await copyToFolder(folderOfB, filePath, path.join(folderOfPatches, 'raw_files'))
   })
 
   await generatePatches({
@@ -78,7 +79,7 @@ async function generateNewVersionPackage({ folderOfA, folderOfPatches, folderOfN
     copyToFolder(folderOfA, filePath, folderOfNewVersion)
   })
 
-  // 3. use bsdiff to patch files, or just copy to folderOfNewVersion
+  // 3. use bsdiff to patch files
   const doPatchPromises = []
 
   Object.keys(modified).forEach(filePath => {
@@ -99,7 +100,8 @@ async function generateNewVersionPackage({ folderOfA, folderOfPatches, folderOfN
   const res = await Promise.all(doPatchPromises)
   console.timeEnd('\nFinish all patch operation')
 
-  await fs.copy(path.join(folderOfPatches, 'new_version'), folderOfNewVersion)
+  // 4、just copy to folderOfNewVersion
+  await fs.copy(path.join(folderOfPatches, 'raw_files'), folderOfNewVersion)
 }
 
 exports.generatePatchPackage = generatePatchPackage

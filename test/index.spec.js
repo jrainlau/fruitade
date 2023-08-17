@@ -26,9 +26,9 @@ describe('Test generatePatchPackage() and generateNewVersionPackage()', () => {
 
     expect(fileList.includes('10b.md.patch')).toBe(true)
     expect(fileList.includes('diff.json')).toBe(true)
-    expect(fileList.includes('new_version')).toBe(true)
+    expect(fileList.includes('raw_files')).toBe(true)
 
-    const stat = fs.statSync(path.join(folderOfPatches, 'new_version'))
+    const stat = fs.statSync(path.join(folderOfPatches, 'raw_files'))
     expect(stat.isDirectory()).toBe(true)
   })
 
