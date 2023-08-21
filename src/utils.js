@@ -1,6 +1,5 @@
 const path = require('path')
 const fs = require('fs-extra')
-const bsdiff = require('bsdiff-node')
 const crypto = require('crypto')
 
 function calculateFileMD5(filePath) {
