@@ -35,8 +35,13 @@ async function copyToFolder(sourceFolderPath, filePath, targetFolder) {
   // 'x/d/e/f'
   const targetDirPath = path.dirname(targetFilePath)
 
+  const sourceFilePath = path.join(sourceFolderPath, filePath)
+
   await fs.ensureDir(targetDirPath)
-  await fs.copy(path.join(sourceFolderPath, filePath), targetFilePath)
+
+  if (!fs.existsSync(sourceFilePath)) return
+
+  await fs.copy(sourceFilePath, targetFilePath)
 }
 
 function doPatch(originFilePath, newFilePath, patchFilePath, getBsdiff) {
