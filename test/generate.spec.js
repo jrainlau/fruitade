@@ -3,6 +3,8 @@ const fs = require('fs-extra')
 const generateDiffJson = require('../src/generateDiffJson')
 const generatePatches = require('../src/generatePatches')
 
+const getBsdiff = () => require('bsdiff-node')
+
 describe('Test generateDiffJson() and generatePatches()', () => {
   const folderOfA = path.resolve(__dirname, './folderOfA')
   const folderOfB = path.resolve(__dirname, './folderOfB')
@@ -23,7 +25,7 @@ describe('Test generateDiffJson() and generatePatches()', () => {
   test('generatePatches()', async () => {
     const diffJson = JSON.parse(fs.readFileSync(diffJsonFilePath))
     await fs.ensureDir(folderOfPatches)
-    const res = await generatePatches({ folderOfA, folderOfB, diffJson, doDiffThreshold: 5, folderOfPatches })
+    const res = await generatePatches({ folderOfA, folderOfB, diffJson, doDiffThreshold: 5, folderOfPatches, getBsdiff })
     
     expect(fs.existsSync(res[0])).toBe(true)
   })

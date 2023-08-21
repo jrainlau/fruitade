@@ -41,11 +41,13 @@ async function copyToFolder(sourceFolderPath, filePath, targetFolder) {
 }
 
 function doPatch(originFilePath, newFilePath, patchFilePath, getBsdiff) {
+  const bsdiffInstance = getBsdiff?.()
+  if (!bsdiffInstance) throw new Error(`Cannot find bsdiff!`)
+
   const consoleTimeLabel = `${newFilePath} generated`
 
   console.time(consoleTimeLabel)
   return new Promise(resolve => {
-    const bsdiffInstance = getBsdiff?.() || bsdiff
     bsdiffInstance.patch(originFilePath, newFilePath, patchFilePath, (res) => {
       if (res === 100) {
         console.timeEnd(consoleTimeLabel)
@@ -55,13 +57,16 @@ function doPatch(originFilePath, newFilePath, patchFilePath, getBsdiff) {
   })
 }
 
-function doDiff(fileA, fileB, filePatch) {
+function doDiff(fileA, fileB, filePatch, getBsdiff) {
+  const bsdiffInstance = getBsdiff?.()
+  if (!bsdiffInstance) throw new Error(`Cannot find bsdiff!`)
+
   return new Promise(resolve => {
     const filename = filePatch.split(path.sep)[filePatch.split(path.sep).length - 1]
     const consoleTimeLabel = `${filename} generated`
 
     console.time(consoleTimeLabel)
-    bsdiff.diff(fileA, fileB, filePatch, (result) => {
+    bsdiffInstance.diff(fileA, fileB, filePatch, (result) => {
       if (result === 100) {
         console.timeEnd(consoleTimeLabel)
         resolve(filePatch)

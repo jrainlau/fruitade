@@ -24,8 +24,9 @@ const { copyToFolder, doPatch, convertPathSeparatorToUnderscore } = require('./u
  * @param {string} folderOfB path of folderOfB
  * @param {string} folderOfPatches path of patchPackage
  * @param {string} doDiffThreshold in kb
+ * @param {Function} getBsdiff return the bsdiff instance
  */
-async function generatePatchPackage({ folderOfA, folderOfB, folderOfPatches, doDiffThreshold = 1024 * 500 }) {
+async function generatePatchPackage({ folderOfA, folderOfB, folderOfPatches, doDiffThreshold = 1024 * 500, getBsdiff }) {
   /** @type {FileInfo} */
   const folderOfAFileInfo = await traverseDirectory(folderOfA)
   /** @type {FileInfo} */
@@ -57,6 +58,7 @@ async function generatePatchPackage({ folderOfA, folderOfB, folderOfPatches, doD
     diffJson,
     doDiffThreshold,
     folderOfPatches,
+    getBsdiff,
   })
 }
 
@@ -65,7 +67,7 @@ async function generatePatchPackage({ folderOfA, folderOfB, folderOfPatches, doD
  * @param {string} folderOfA
  * @param {string} folderOfPatches
  * @param {string} folderOfNewVersion
- * @param {Function} [getBsdiff] return the bsdiff instance
+ * @param {Function} getBsdiff return the bsdiff instance
  */
 async function generateNewVersionPackage({ folderOfA, folderOfPatches, folderOfNewVersion, getBsdiff }) {
   // 1. init folderOfNewVersion folder

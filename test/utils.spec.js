@@ -1,6 +1,8 @@
 const fs = require('fs-extra')
 const path = require('path')
 
+const getBsdiff = () => require('bsdiff-node')
+
 const {
   calculateFileMD5,
   copyToFolder,
@@ -33,7 +35,7 @@ describe('Test utils.js', () => {
     const fileB = path.resolve(__dirname, './folderOfB/10b.md')
     const filePatch = path.resolve(__dirname, './10b.md.patch')
 
-    await doDiff(fileA, fileB, filePatch)
+    await doDiff(fileA, fileB, filePatch, getBsdiff)
 
     expect(fs.existsSync(filePatch)).toBe(true)
   })
@@ -44,7 +46,7 @@ describe('Test utils.js', () => {
     const fileNew = path.resolve(__dirname, './10b.md')
     const filePatch = path.resolve(__dirname, './10b.md.patch')
 
-    await doPatch(fileA, fileNew, filePatch)
+    await doPatch(fileA, fileNew, filePatch, getBsdiff)
 
     const fileBMD5 = await calculateFileMD5(fileB)
     const fileNewMD5 = await calculateFileMD5(fileNew)

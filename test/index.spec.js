@@ -2,6 +2,8 @@ const path = require('path')
 const fs = require('fs-extra')
 const { generatePatchPackage, generateNewVersionPackage } = require('../src/index.js')
 
+const getBsdiff = () => require('bsdiff-node')
+
 describe('Test generatePatchPackage() and generateNewVersionPackage()', () => {
   const folderOfA = path.resolve(__dirname, './folderOfA')
   const folderOfB = path.resolve(__dirname, './folderOfB')
@@ -20,6 +22,7 @@ describe('Test generatePatchPackage() and generateNewVersionPackage()', () => {
       folderOfB,
       folderOfPatches,
       doDiffThreshold,
+      getBsdiff,
     })
 
     const fileList = fs.readdirSync(folderOfPatches)
@@ -37,6 +40,7 @@ describe('Test generatePatchPackage() and generateNewVersionPackage()', () => {
       folderOfA,
       folderOfPatches,
       folderOfNewVersion,
+      getBsdiff,
     })
 
     const fileBInfolderOfBContent = fs.readFileSync(path.join(folderOfB, 'a_new_folder_of_b', 'fileB.md'), 'utf-8')
