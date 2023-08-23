@@ -1,14 +1,14 @@
 const { resolve } = require('path')
 const { generatePatchPackage, generateNewVersionPackage } = require('../src/index.js')
 
-generatePatchPackage({
-  folderOfA: resolve(__dirname, './folderOfA'),
-  folderOfB: resolve(__dirname, './folderOfB'),
-  folderOfPatches: resolve(__dirname, './diffFolder'),
-  doDiffThreshold: 5,
-  getBsdiff: () => require('bsdiff-node'),
-  ignoreExts: ['.framework', '.app'],
-})
+// generatePatchPackage({
+//   folderOfA: resolve(__dirname, './folderOfA'),
+//   folderOfB: resolve(__dirname, './folderOfB'),
+//   folderOfPatches: resolve(__dirname, './diffFolder'),
+//   doDiffThreshold: 5,
+//   getBsdiff: () => require('bsdiff-node'),
+//   ignoreFileNames: ['ScreenCaptureAgent.framework', 'QQ ScreenCapture plugin.app'],
+// })
 
 // generateNewVersionPackage({
 //   folderOfA: resolve(__dirname, './folderOfA'),

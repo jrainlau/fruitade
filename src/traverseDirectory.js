@@ -1,8 +1,9 @@
-const fs = require('fs')
+const fs = require('fs-extra')
 const path = require('path')
 const { calculateFileMD5 } = require('./utils')
+const { hashElement } = require('folder-hash')
 
-async function traverseDirectory(dirPath, ignoreExts) {
+async function traverseDirectory(dirPath, ignoreFileNames) {
   const rootDirPath = dirPath
   const dirs = {}
   const symbolicLinks = []
@@ -18,10 +19,16 @@ async function traverseDirectory(dirPath, ignoreExts) {
       const { size } = stat
       const isDirectory = stat.isDirectory()
       const isSymbolicLink = stat.isSymbolicLink()
-      const isIgnoreFile = ignoreExts.includes(path.extname(filePath))
+      const isIgnoreFile = ignoreFileNames.includes(filename)
 
       if (isIgnoreFile) {
-        ignoreFiles.push(filePath.replace(rootDirPath, ''))
+        const stat = await fs.stat(filePath)
+        const md5 = stat.isDirectory() ? (await hashElement(filePath)).hash : await calculateFileMD5(filePath)
+
+        ignoreFiles.push({
+          filename,
+          md5
+        })
       }
 
       if (!isDirectory && !isSymbolicLink && !isIgnoreFile) {
@@ -45,8 +52,6 @@ async function traverseDirectory(dirPath, ignoreExts) {
   }
 
   await traverse(dirPath, dirs)
-
-  // console.log({ dirs, symbolicLinks, ignoreFiles })
 
   return { dirs, symbolicLinks, ignoreFiles }
 }
