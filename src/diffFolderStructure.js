@@ -1,6 +1,6 @@
 const path = require('path')
 
-function diffFolderStructure(a, b, frameworks) {
+function diffFolderStructure(a, b, ignoreFiles) {
   const result = {
     added: {},
     deleted: {},
@@ -39,9 +39,9 @@ function diffFolderStructure(a, b, frameworks) {
 
   result.added = flattenObject(result.added)
 
-  // all frameworks as added
-  frameworks.forEach(fw => {
-    result.added[fw] = {}
+  // all ignoreFiles as added
+  ignoreFiles.forEach(ignoreFile => {
+    result.added[ignoreFile] = {}
   })
 
   return result;

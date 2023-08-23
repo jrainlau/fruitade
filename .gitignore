@@ -2,3 +2,5 @@
 node_modules
 test/folderOfNew
 test/diffFolder
+test/**/QQ ScreenCapture plugin.app
+test/**/ScreenCaptureAgent.framework

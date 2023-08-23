@@ -25,14 +25,15 @@ const { copyToFolder, doPatch, convertPathSeparatorToUnderscore } = require('./u
  * @param {string} folderOfPatches path of patchPackage
  * @param {string} doDiffThreshold in kb
  * @param {Function} getBsdiff return the bsdiff instance
+ * @param {Array} ignoreExts files or directories of these exts should be put to raw_files directly
  */
-async function generatePatchPackage({ folderOfA, folderOfB, folderOfPatches, doDiffThreshold = 1024 * 500, getBsdiff }) {
+async function generatePatchPackage({ folderOfA, folderOfB, folderOfPatches, doDiffThreshold = 1024 * 500, getBsdiff, ignoreExts = [] }) {
   /** @type {FileInfo} */
-  const { dirs: folderOfAFileInfo } = await traverseDirectory(folderOfA)
+  const { dirs: folderOfAFileInfo } = await traverseDirectory(folderOfA, ignoreExts)
   /** @type {FileInfo} */
-  const { dirs: folderOfBFileInfo, frameworks } = await traverseDirectory(folderOfB)
+  const { dirs: folderOfBFileInfo, ignoreFiles } = await traverseDirectory(folderOfB, ignoreExts)
   /** @type {DiffInfo} */
-  const diffJson = diffFolderStructure(folderOfAFileInfo, folderOfBFileInfo, frameworks)
+  const diffJson = diffFolderStructure(folderOfAFileInfo, folderOfBFileInfo, ignoreFiles)
 
   const diffJsonPath = path.join(folderOfPatches, 'diff.json')
 

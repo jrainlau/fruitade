@@ -2,11 +2,11 @@ const fs = require('fs')
 const path = require('path')
 const { calculateFileMD5 } = require('./utils')
 
-async function traverseDirectory(dirPath) {
+async function traverseDirectory(dirPath, ignoreExts) {
   const rootDirPath = dirPath
   const dirs = {}
   const symbolicLinks = []
-  const frameworks = []
+  const ignoreFiles = []
 
   async function traverse(dirPath, dirs) {
     const filenameList = fs.readdirSync(dirPath)
@@ -18,13 +18,13 @@ async function traverseDirectory(dirPath) {
       const { size } = stat
       const isDirectory = stat.isDirectory()
       const isSymbolicLink = stat.isSymbolicLink()
-      const isFramework = path.extname(filePath) === '.framework'
+      const isIgnoreFile = ignoreExts.includes(path.extname(filePath))
 
-      if (isFramework) {
-        frameworks.push(filePath.replace(rootDirPath, ''))
+      if (isIgnoreFile) {
+        ignoreFiles.push(filePath.replace(rootDirPath, ''))
       }
 
-      if (!isDirectory && !isSymbolicLink && !isFramework) {
+      if (!isDirectory && !isSymbolicLink && !isIgnoreFile) {
         dirs[filename] = {
           filename,
           size,
@@ -32,7 +32,7 @@ async function traverseDirectory(dirPath) {
         }
       }
       
-      if (isDirectory && !isFramework) {
+      if (isDirectory && !isIgnoreFile) {
         dirs[filename] = {}
         await traverse(filePath, dirs[filename])
       }
@@ -46,7 +46,9 @@ async function traverseDirectory(dirPath) {
 
   await traverse(dirPath, dirs)
 
-  return { dirs, symbolicLinks, frameworks }
+  // console.log({ dirs, symbolicLinks, ignoreFiles })
+
+  return { dirs, symbolicLinks, ignoreFiles }
 }
 
 module.exports = traverseDirectory
