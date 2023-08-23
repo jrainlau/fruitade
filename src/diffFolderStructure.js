@@ -1,4 +1,6 @@
-function diffFolderStructure(a, b) {
+const path = require('path')
+
+function diffFolderStructure(a, b, frameworks) {
   const result = {
     added: {},
     deleted: {},
@@ -36,6 +38,11 @@ function diffFolderStructure(a, b) {
   traverse(a, b);
 
   result.added = flattenObject(result.added)
+
+  // all frameworks as added
+  frameworks.forEach(fw => {
+    result.added[fw] = {}
+  })
 
   return result;
 }

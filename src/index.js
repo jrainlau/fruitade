@@ -28,11 +28,11 @@ const { copyToFolder, doPatch, convertPathSeparatorToUnderscore } = require('./u
  */
 async function generatePatchPackage({ folderOfA, folderOfB, folderOfPatches, doDiffThreshold = 1024 * 500, getBsdiff }) {
   /** @type {FileInfo} */
-  const folderOfAFileInfo = await traverseDirectory(folderOfA)
+  const { dirs: folderOfAFileInfo } = await traverseDirectory(folderOfA)
   /** @type {FileInfo} */
-  const folderOfBFileInfo = await traverseDirectory(folderOfB)
+  const { dirs: folderOfBFileInfo, frameworks } = await traverseDirectory(folderOfB)
   /** @type {DiffInfo} */
-  const diffJson = diffFolderStructure(folderOfAFileInfo, folderOfBFileInfo)
+  const diffJson = diffFolderStructure(folderOfAFileInfo, folderOfBFileInfo, frameworks)
 
   const diffJsonPath = path.join(folderOfPatches, 'diff.json')
 

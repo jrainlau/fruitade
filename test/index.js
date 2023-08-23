@@ -1,15 +1,17 @@
-// const { resolve } = require('path')
-// const { generatePatchPackage, generateNewVersionPackage } = require('../src/index.js')
+const { resolve } = require('path')
+const { generatePatchPackage, generateNewVersionPackage } = require('../src/index.js')
 
 // generatePatchPackage({
-//   folderA: resolve(__dirname, './folderA'),
-//   folderB: resolve(__dirname, './folderB'),
-//   folderPatch: resolve(__dirname, './folderPatch'),
+//   folderOfA: resolve(__dirname, './folderOfA'),
+//   folderOfB: resolve(__dirname, './folderOfB'),
+//   folderOfPatches: resolve(__dirname, './diffFolder'),
 //   doDiffThreshold: 5,
+//   getBsdiff: () => require('bsdiff-node'),
 // })
 
 // generateNewVersionPackage({
-//   folderA: resolve(__dirname, './folderA'),
-//   folderPatch: resolve(__dirname, './folderPatch'),
-//   folderOfNewVersion: resolve(__dirname, './folderOfNewVersion'),
+//   folderOfA: resolve(__dirname, './folderOfA'),
+//   folderOfPatches: resolve(__dirname, './diffFolder'),
+//   folderOfNewVersion: resolve(__dirname, './folderOfNew'),
+//   getBsdiff: () => require('bsdiff-node'),
 // })
