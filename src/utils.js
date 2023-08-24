@@ -80,7 +80,7 @@ function doDiff(fileA, fileB, filePatch, getBsdiff) {
 }
 
 function convertPathSeparatorToUnderscore(filePath) {
-  return filePath.split(path.sep).join('_')
+  return filePath.split('/').join('_')
 }
 
 exports.calculateFileMD5 = calculateFileMD5
