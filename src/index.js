@@ -5,6 +5,7 @@ const traverseDirectory = require('./traverseDirectory')
 const diffFolderStructure = require('./diffFolderStructure')
 const generatePatches = require('./generatePatches')
 const { copyToFolder, doPatch, convertPathSeparatorToUnderscore } = require('./utils')
+const checkFiles = require('./checkFiles')
 
 /**
  * @typedef {Object.<string, { filename: string; md5: string; size: number }>} FileInfo
@@ -82,7 +83,7 @@ async function generateNewVersionPackage({ folderOfA, folderOfPatches, folderOfN
 
   // 2. copy all unchanged files into folderOfNewVersion folder
   const diffJson = JSON.parse(fs.readFileSync(path.join(folderOfPatches, 'diff.json')))
-  const { unchanged, modified } = diffJson
+  const { added, unchanged, modified } = diffJson
   
   Object.keys(unchanged).forEach(filePath => {
     copyToFolder(folderOfA, filePath, folderOfNewVersion)
@@ -111,6 +112,11 @@ async function generateNewVersionPackage({ folderOfA, folderOfPatches, folderOfN
 
   // 4、just copy to folderOfNewVersion
   await fs.copy(path.join(folderOfPatches, 'raw_files'), folderOfNewVersion)
+
+  // 5、check all files by the md5s from diff.json
+  const checkRes = await checkFiles({ diffJson, folderOfNewPath: folderOfNewVersion })
+
+  return checkRes
 }
 
 exports.generatePatchPackage = generatePatchPackage
