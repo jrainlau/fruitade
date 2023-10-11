@@ -46,6 +46,6 @@ describe('Test generatePatchPackage() and generateNewVersionPackage()', () => {
     const fileBInfolderOfBContent = fs.readFileSync(path.join(folderOfB, 'a_new_folder_of_b', 'fileB.md'), 'utf-8')
     const fileBInfolderOfNewVersionContent = fs.readFileSync(path.join(folderOfNewVersion, 'a_new_folder_of_b', 'fileB.md'), 'utf-8')
     expect(fileBInfolderOfNewVersionContent).toEqual(fileBInfolderOfBContent)
-    expect(res).toBe(true)
+    expect(typeof res).toBe('object')
   })
 })

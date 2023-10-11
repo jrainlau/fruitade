@@ -112,6 +112,10 @@ async function generateNewVersionPackage({ folderOfA, folderOfPatches, folderOfN
 
   // 4、just copy to folderOfNewVersion
   await fs.copy(path.join(folderOfPatches, 'raw_files'), folderOfNewVersion)
+
+  // 5. get md5 checking result
+  const md5CheckingRes = await checkFiles({ diffJson, folderOfNewPath: folderOfNewVersion })
+  return md5CheckingRes
 }
 
 exports.generatePatchPackage = generatePatchPackage
