@@ -17,7 +17,11 @@ async function checkFiles({ diffJson, folderOfNewPath }) {
       return { filePath, fileInfo, checkRes: false, msg: 'file not exists' }
     }
 
-    const fileMD5 = await calculateFileMD5(path.join(folderOfNewPath, filePath))
+    if (fs.statSync(targetFilePath).isDirectory()) {
+      return { filePath, fileInfo, checkRes: true, msg: 'skip checking directory' }
+    }
+
+    const fileMD5 = await calculateFileMD5(targetFilePath)
     const recordMD5 = fileInfo.md5
 
     return { filePath, fileInfo, checkRes: fileMD5 === recordMD5, msg: `fileMD5: ${fileMD5}; recordMD5: ${recordMD5}` }

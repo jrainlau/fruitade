@@ -1,4 +1,5 @@
 const fs = require('fs-extra')
+const originFs = require('original-fs')
 const path = require('path')
 
 const traverseDirectory = require('./traverseDirectory')
@@ -111,11 +112,30 @@ async function generateNewVersionPackage({ folderOfA, folderOfPatches, folderOfN
   console.timeEnd('\nFinish all patch operation')
 
   // 4、just copy to folderOfNewVersion
-  await fs.copy(path.join(folderOfPatches, 'raw_files'), folderOfNewVersion)
+  // NOTE: In electron, .asar file would cause error while using fsExtra.copy
+  // https://github.com/jprichardson/node-fs-extra/issues/637
+  copySync(path.join(folderOfPatches, 'raw_files'), folderOfNewVersion)
 
   return {
     diffJson,
     folderOfNewVersion,
+  }
+}
+
+function copySync(src, dest) {
+  const stats = originFs.statSync(src);
+  const isDirectory = stats.isDirectory();
+
+  if (isDirectory) {
+    originFs.mkdirSync(dest, { recursive: true });
+    const files = originFs.readdirSync(src);
+    files.forEach(file => {
+      const srcPath = path.join(src, file);
+      const destPath = path.join(dest, file);
+      copySync(srcPath, destPath);
+    });
+  } else {
+    originFs.copyFileSync(src, dest);
   }
 }
 
