@@ -77,6 +77,8 @@ async function generatePatchPackage({ folderOfA, folderOfB, folderOfPatches, doD
  * @param {Function} getBsdiff return the bsdiff instance
  */
 async function generateNewVersionPackage({ folderOfA, folderOfPatches, folderOfNewVersion, getBsdiff }) {
+  const oriNoAsarVal = process.noAsar
+  process.noAsar = true
   // 1. init folderOfNewVersion folder
   fs.removeSync(folderOfNewVersion)
   fs.mkdirSync(folderOfNewVersion)
@@ -114,6 +116,8 @@ async function generateNewVersionPackage({ folderOfA, folderOfPatches, folderOfN
   // NOTE: In electron, .asar file would cause error while using fsExtra.copy
   // https://github.com/jprichardson/node-fs-extra/issues/637
   fs.copySync(path.join(folderOfPatches, 'raw_files'), folderOfNewVersion)
+
+  process.noAsar = oriNoAsarVal
 
   return {
     diffJson,
