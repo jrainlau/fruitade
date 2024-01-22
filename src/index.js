@@ -5,7 +5,7 @@ const traverseDirectory = require('./traverseDirectory')
 const diffFolderStructure = require('./diffFolderStructure')
 const generatePatches = require('./generatePatches')
 const { copyToFolder, doPatch, convertPathSeparatorToUnderscore } = require('./utils')
-const checkFiles = require('./checkFiles')
+const integrityDetect = require('./integrityDetect')
 
 /**
  * @typedef {Object.<string, { filename: string; md5: string; size: number }>} FileInfo
@@ -108,9 +108,7 @@ async function generateNewVersionPackage({ folderOfA, folderOfPatches, folderOfN
     }
   })
 
-  console.time('\nFinish all patch operation')
   const res = await Promise.all(doPatchPromises)
-  console.timeEnd('\nFinish all patch operation')
 
   // 4、just copy to folderOfNewVersion
   // NOTE: In electron, .asar file would cause error while using fsExtra.copy
@@ -127,4 +125,4 @@ async function generateNewVersionPackage({ folderOfA, folderOfPatches, folderOfN
 
 exports.generatePatchPackage = generatePatchPackage
 exports.generateNewVersionPackage = generateNewVersionPackage
-exports.checkFiles = checkFiles
+exports.integrityDetect = integrityDetect

@@ -27,9 +27,7 @@ async function generatePatches({ folderOfA, folderOfB, diffJson, doDiffThreshold
     bsdiffPromises.push(bsdiffPromise)
   }
 
-  console.time('\nFinish all diff operation')
   const diffRes = await Promise.all(bsdiffPromises)
-  console.timeEnd('\nFinish all diff operation')
   return diffRes
 }
 

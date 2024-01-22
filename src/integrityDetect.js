@@ -2,7 +2,10 @@ const path = require('path')
 const fs = require('fs-extra')
 const { calculateFileMD5 } = require('./utils')
 
-async function checkFiles({ diffJson, folderOfNewPath }) {
+async function integrityDetect({ diffJson, folderOfNewPath }) {
+  const oriNoAsarVal = process.noAsar
+  process.noAsar = true
+
   const { added, modified, unchanged } = diffJson
   const allNewFiles = { ...added, ...unchanged, ...modified }
 
@@ -29,7 +32,9 @@ async function checkFiles({ diffJson, folderOfNewPath }) {
 
   const res = await Promise.all(checkPromises)
 
+  process.noAsar = oriNoAsarVal
+
   return res
 }
 
-module.exports = checkFiles
+module.exports = integrityDetect

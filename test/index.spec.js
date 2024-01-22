@@ -1,6 +1,6 @@
 const path = require('path')
 const fs = require('fs-extra')
-const { generatePatchPackage, generateNewVersionPackage } = require('../src/index.js')
+const { generatePatchPackage, generateNewVersionPackage, integrityDetect } = require('../src/index.js')
 
 const getBsdiff = () => require('bsdiff-node')
 
@@ -10,6 +10,13 @@ describe('Test generatePatchPackage() and generateNewVersionPackage()', () => {
   const folderOfNewVersion = path.resolve(__dirname, './folderOfNewVersion')
   const folderOfPatches = path.resolve(__dirname, './folderOfPatches2')
   const doDiffThreshold = 5
+
+  afterEach((done) => {
+    setTimeout(() => {
+      console.log(`Delay 2000ms to ensure files were fully generated.`)
+      done()
+    }, 2000);
+  })
 
   afterAll(() => {
     fs.removeSync(folderOfPatches)
@@ -47,5 +54,13 @@ describe('Test generatePatchPackage() and generateNewVersionPackage()', () => {
     const fileBInfolderOfNewVersionContent = fs.readFileSync(path.join(folderOfNewVersion, 'a_new_folder_of_b', 'fileB.md'), 'utf-8')
     expect(fileBInfolderOfNewVersionContent).toEqual(fileBInfolderOfBContent)
     expect(typeof res).toBe('object')
+  })
+
+  test('integrityDetect', async () => {
+    const diffJson = require('./folderOfPatches2/diff.json')
+    const folderOfNewPath = folderOfNewVersion
+    const checkResult = await integrityDetect({ diffJson, folderOfNewPath })
+    const isCheckingPassed = checkResult.every(({ checkRes }) => checkRes)
+    expect(isCheckingPassed).toBe(true)
   })
 })
